@@ -87,7 +87,9 @@ kept being requested, promoted into defaults. Treat them as the bar:
   can decide whether it's in scope for this launch.
 - **Content consistency counts too:** numbers, tenure claims, section numbering, and
   labels must agree across pages. A stat that says "7 years" on one page and "8" on
-  another is a P1.
+  another is a P1. Same for terminology and interaction patterns — one name per
+  thing, one behavior per gesture (sweep procedure in
+  [references/visual-rhythm.md](references/visual-rhythm.md)).
 - **Facts live in more places than the visible UI.** Numbers and claims are usually
   duplicated in machine-readable copies: JSON-LD, meta descriptions, `llms.txt`,
   hidden SEO/noscript blocks, data files. Grep the repo for the old value — a real

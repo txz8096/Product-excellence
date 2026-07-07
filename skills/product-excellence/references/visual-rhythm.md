@@ -77,6 +77,26 @@ Open one established sibling page side by side. Compare: header/nav treatment, c
 anatomy (padding, tag row, hover state), type scale, accent-color usage, footer.
 Every divergence is a finding unless the design source of truth sanctions it.
 
+### Language & pattern consistency
+
+Two consistency classes hide from visual comparison and need their own sweep:
+
+- **Terminology:** the same thing carries the same name everywhere — no "Resume"
+  on one surface and "CV" on another, no "Sign in" vs "Log in", no feature
+  renamed mid-product. Collect the nouns and verbs the UI uses for its key
+  objects and actions (buttons, nav, headings, empty states) and diff them.
+  Same rule for micro-conventions: external-link arrows (↗ vs →), date formats,
+  capitalization of the same label.
+- **Interaction patterns:** the same gesture means the same thing everywhere.
+  If one external link opens a new tab, all should; if one card is fully
+  clickable, sibling cards shouldn't require hitting a small link inside; if a
+  list numbers its items in one place, the same list elsewhere shouldn't drop
+  the numbers. Inventory the repeated patterns (links, cards, chips, dialogs)
+  and check each behaves identically at every occurrence.
+
+P1 when the inconsistency can mislead (a renamed action reads as a different
+action); P2 when it just reads as sloppiness.
+
 ## Evidence format
 
 Every finding cites: viewport, selector, measured value, expected value.
