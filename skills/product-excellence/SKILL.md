@@ -2,8 +2,9 @@
 name: product-excellence
 description: >
   Standardized pre-launch design QA that ends in a prioritized, paste-ready fix list.
-  Runs three passes over the rendered product: (1) visual rhythm and responsiveness,
-  (2) accessibility, (3) persona-based CUJ walkthroughs. Use whenever the user says
+  Runs four passes over the rendered product: (1) visual rhythm and responsiveness,
+  (2) accessibility, (3) persona-based CUJ walkthroughs, (4) launch readiness
+  (share card, link integrity, production re-verify, regression guard). Use whenever the user says
   "product excellence", "pre-launch review", "launch check", "is this ready to ship",
   "review before I deploy/publish", "visual rhythm check", "persona walkthrough", or
   is about to launch, deploy, publish, or share any page, site, feature, or prototype.
@@ -34,15 +35,20 @@ Before reviewing anything:
    plain HTML) and drive the actual page. Interactions must be exercised, not read
    about: click the buttons, open the panels, hover the cards, submit the inputs.
 
-## The three passes
+## The four passes
 
-Run all three, in this order (each pass reuses the running preview). Read the
-reference file when you begin each pass:
+Run all four, in this order (each pass reuses the running preview). Read the
+reference file when you begin each pass. If the repo has a `qa-checks.md`
+(saved acceptance checks from a previous review), run its newest checklist
+**before** pass 1 and report regressions first.
 
 1. **Visual rhythm & responsiveness** — read [references/visual-rhythm.md](references/visual-rhythm.md);
    if the surface animates, also read [references/motion.md](references/motion.md)
 2. **Accessibility** — read [references/accessibility.md](references/accessibility.md)
 3. **Persona CUJ walkthrough** — read [references/cuj-walkthrough.md](references/cuj-walkthrough.md)
+4. **Launch readiness** — read [references/launch-readiness.md](references/launch-readiness.md):
+   share card and tab presence, link integrity, production re-verify,
+   saved acceptance checks, browser-risk scan
 
 Collect findings as you go with evidence attached (viewport, selector, measured
 value, or walkthrough step). A finding without evidence is an opinion; don't ship
@@ -110,16 +116,19 @@ ALWAYS use this exact structure:
 ```
 # Product Excellence Review — <target>
 Reviewed at: <viewports tested> · Console: <clean / N errors> · Scope: <pages>
+Verified on: <local / production / both> · Regressions: <0 of N saved checks / no saved checks>
+Browser risk: <uneven-support features found, each with/without fallback — or "none">
 
 ## Verdict
-<Ship / Ship after P0s / Hold> — one sentence why.
+<Ship / Ship after P0s / Hold> — one sentence why. (A Ship verdict verified
+only locally is "Ship, then confirm on production".)
 
 ## Findings
-| # | Pri | Pass | Finding |
-|---|-----|------|---------|
+| # | Pri | Effort | Pass | Finding |
+|---|-----|--------|------|---------|
 (one row per finding, ordered by priority then impact)
 
-### 1. [P0] <short title>
+### 1. [P0·S] <short title>
 - **Evidence:** <viewport / selector / measured value / walkthrough step>
 - **Why it matters:** <one sentence, tied to a user or persona>
 - **Fix prompt:** ↓ paste-ready
@@ -144,6 +153,12 @@ Reviewed at: <viewports tested> · Console: <clean / N errors> · Scope: <pages>
   affordances, minor motion issues.
 
 Within a priority, order by (users affected × how early in the journey they hit it).
+
+**Effort tags:** every finding also carries **S** (copy/CSS one-liner), **M**
+(component logic, an hour-ish), or **L** (architectural — a build step, a
+routing change). Impact decides priority; effort decides the cut line — it
+lets the user say "all P0s plus the P1-smalls before I share this" instead of
+relitigating each item.
 
 **Fix prompts are the deliverable.** Each must name the file, the selector or
 element, the current value, the target value, and how to verify ("at 375px,
@@ -187,6 +202,10 @@ When the user says "fix it," the review's fix prompts become your work orders:
 5. **Leave the workflow documented.** If fixing changed how the project is edited
    (new build step, new file layout), record it in the project's CLAUDE.md so the
    next session doesn't undo it.
+6. **Save the acceptance checks.** Write the criteria you just verified to
+   `qa-checks.md` at the repo root (format in
+   [references/launch-readiness.md](references/launch-readiness.md)) so the next
+   review starts by catching regressions instead of rediscovering them.
 
 ## Scaling the review
 
