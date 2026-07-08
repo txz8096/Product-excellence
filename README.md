@@ -6,94 +6,107 @@ On product teams, that 70% has a name — product excellence — and it runs on
 review passes, checklists, and hard-won instincts about what breaks before
 launch.
 
-This skill packages those instincts into a repeatable process for Claude Code:
-a standardized pre-launch design QA on any web surface that ends in a
-prioritized, paste-ready fix list instead of a critique essay.
+This skill gives Claude Code those instincts. One request, and it drives your
+**rendered page** — real browser, real viewports, real clicks — through the
+pre-launch review a design team would run, and hands back a ranked list of
+what to fix, each item written as a prompt you can paste straight back into
+Claude Code.
 
-It was built by a designer from months of real design-iteration sessions:
-the fixes that kept being requested got promoted into defaults, and the
-measurement mistakes that produced false findings got documented so they
-never happen twice.
+You don't need to know what to look for. That's the point.
 
-## What it does
+## What a finding looks like
 
-Say `run a product excellence review on <page>` (or "pre-launch check", "is
-this ready to ship") and Claude drives the **rendered page** — real browser,
-real viewports, real clicks — through four passes:
+Every finding has evidence (measured, not vibes), a reason tied to a real
+user, and a fix prompt that works in a fresh session with zero context:
 
-1. **Visual rhythm & responsiveness** — viewport matrix (laptop / small laptop /
-   mobile / 200% zoom / tall screens), programmatic overflow detection, word-break
-   and orphan checks, spacing-scale audits (values must sit on a scale, not a
-   scatter), cross-page consistency against the design source of truth. If the
-   surface animates, motion gets reviewed against Emil Kowalski's standards.
-2. **Accessibility** — measured contrast (compositing opacity into effective
-   colors, checking hover/focus/disabled states, not just the resting render),
-   keyboard paths and focus visibility, touch targets, zoom reflow, forms,
-   heading/landmark structure, reduced motion, and async/AI states (loading must
-   resolve, errors must offer a way forward).
-3. **Persona CUJ walkthrough** — 2–3 personas derived from what the product is
-   for (one always carries an access need, woven in naturally), walked through
-   the core journeys step by step: what they want, what they actually see, what
-   questions they'd have, whether the next action is discoverable, what's
-   missing or confusing. Cognitive load gets scored, not just task completion.
+> ### 3. [P1·S] Hero stat line is ellipsis-clipped at every viewport
+> - **Evidence:** `.about__stats` — scrollWidth 415 > clientWidth 400 at
+>   1440×900; renders as "complex too…". Same clip at 375px.
+> - **Why it matters:** it's the credential line — the first thing a skimming
+>   recruiter reads, and it's visibly truncated on their first scan.
+> - **Fix prompt:** ↓ paste-ready
+>
+> > In index.html, the hero stats element `.about__stats` is clipped by
+> > `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` inside
+> > the 400px hero column. Remove the nowrap/ellipsis and let it wrap to two
+> > lines. Acceptance: at 1440×900 and 375×812 the full text is visible
+> > (element scrollWidth ≤ clientWidth).
+
+The report opens with a verdict — **Ship / Ship after P0s / Hold** — and
+findings are ranked P0 (blocker) → P1 (fix before sharing) → P2 (polish),
+each tagged S/M/L for effort so you can draw a realistic cut line ("all P0s
+plus the P1-smalls today"). A closing "what's working" section keeps the good
+patterns from being accidentally "fixed" later.
+
+## Quickstart
+
+Install (pick one):
+
+```bash
+# skills installer
+npx skills@latest add txz8096/product-excellence
+
+# or manual
+git clone https://github.com/txz8096/product-excellence.git
+cp -r product-excellence/skills/product-excellence ~/.claude/skills/
+```
+
+(For one project only: copy into `<your-repo>/.claude/skills/` instead.)
+
+Then, in Claude Code, point it at anything a browser can render — a local
+HTML file, a dev server, a deployed URL:
+
+```
+run a product excellence review on index.html
+```
+
+It also triggers on "pre-launch check", "is this ready to ship?", and
+"review this before I deploy". A full review of a small site takes a few
+minutes; Claude resizes viewports, clicks through flows, and measures as it
+goes.
+
+When the report is back, say **"fix it"** — the fix prompts become work
+orders: Claude applies them in source, re-verifies each against its own
+acceptance criterion, and saves the checks to `qa-checks.md` so the *next*
+review catches regressions before hunting new findings.
+
+## The four passes
+
+1. **Visual rhythm & responsiveness** — does the page hold its composure at
+   laptop, small-laptop, phone, 200% zoom, and tall screens? Overflow is
+   detected programmatically, spacing is audited against a scale (three cards
+   with padding 24/22/25 is a finding), content gets stress-tested with
+   hostile-but-legal strings, and layout shift is measured, not eyeballed.
+   Animated surfaces get held to [Emil Kowalski's motion bar](skills/product-excellence/references/motion.md).
+2. **Accessibility** — measured contrast that accounts for opacity and checks
+   hover/focus/disabled states, keyboard paths with visible focus, touch
+   targets, zoom reflow, heading/landmark structure, reduced motion, and
+   async/AI states (loading must resolve; errors must offer a way forward).
+3. **User walkthroughs** — 2–3 realistic users derived from what the product
+   is for (one always carries an access need, woven in naturally), walked
+   through the core journeys step by step: what they want, what they actually
+   see, what would confuse them, whether the next step is discoverable.
 4. **Launch readiness** — the product's life outside the viewport: the
-   share-card unfurl and browser tab (`og:` tags, favicon, title), link
-   integrity (every href resolves), a production re-verify step (local
-   verdicts are conditional), a browser-risk scan for unevenly-supported
-   features, and a regression guard — verified acceptance checks get saved to
-   `qa-checks.md` so the next review catches regressions before hunting new
-   findings.
-
-### The output contract
-
-Every review ends in the same structure: a ship / ship-after-P0s / hold verdict
-(with a "verified on: local vs production" qualifier and a browser-risk line),
-findings ordered **P0 (launch blocker) → P1 (fix before sharing) → P2 (polish)**
-and tagged **S/M/L for effort** so the cut line is negotiable ("all P0s plus the
-P1-smalls"), and — the actual deliverable — a **self-contained fix prompt per
-finding** that names the file, selector, current value, target value, and how to
-verify. Each prompt works in a brand-new Claude Code session with zero context.
-A closing "what's working" section keeps good patterns from being "fixed" later.
-
-Findings require evidence (viewport, selector, measured value, or walkthrough
-step). A finding without evidence is an opinion, and the skill doesn't ship
-opinions.
-
-### Fix mode
-
-Say "fix it" and the fix prompts become work orders: read the repo's standing
-rules first, fix in source (not in generated output), re-verify each finding
-against its own acceptance criterion, then sync the design doc and any
-machine-readable content copies (JSON-LD, llms.txt, meta) the fixes touched.
+   link-unfurl card and browser tab, every href checked for dead links, a
+   production re-verify step, a browser-support risk scan, and the saved
+   regression checks.
 
 ## What's inside
 
 | File | What it holds |
 |---|---|
-| [skills/product-excellence/SKILL.md](skills/product-excellence/SKILL.md) | The process: scoping, the three passes, house standards, output format, fix mode |
-| [references/visual-rhythm.md](skills/product-excellence/references/visual-rhythm.md) | Pass 1 checklist + overflow-detection script |
+| [skills/product-excellence/SKILL.md](skills/product-excellence/SKILL.md) | The process: scoping, the four passes, house standards, output format, fix mode |
+| [references/visual-rhythm.md](skills/product-excellence/references/visual-rhythm.md) | Pass 1 checklist + overflow and layout-shift scripts |
 | [references/motion.md](skills/product-excellence/references/motion.md) | Animation bar, adapted from [Emil Kowalski's review-animations](https://github.com/emilkowalski/skills) (animations.dev) |
 | [references/accessibility.md](skills/product-excellence/references/accessibility.md) | Pass 2 checklist + a contrast script that composites opacity |
 | [references/cuj-walkthrough.md](skills/product-excellence/references/cuj-walkthrough.md) | Pass 3: persona construction, walkthrough protocol, honesty rules |
-| [references/launch-readiness.md](skills/product-excellence/references/launch-readiness.md) | Pass 4: share card, link integrity, production re-verify, saved acceptance checks, browser-risk scan |
-| [references/preview-pitfalls.md](skills/product-excellence/references/preview-pitfalls.md) | Measurement traps that each burned a real review once (`offsetParent` lies about fixed elements, `preview_fill` vs. React state, `:focus-visible` heuristics…) |
+| [references/launch-readiness.md](skills/product-excellence/references/launch-readiness.md) | Pass 4: share card, link integrity, production re-verify, regression guard, browser risk |
+| [references/preview-pitfalls.md](skills/product-excellence/references/preview-pitfalls.md) | Measurement traps that each burned a real review once (`offsetParent` lies about fixed elements, filling inputs vs. React state, `:focus-visible` heuristics…) |
 
-## Install
-
-**Manual (Claude Code):**
-
-```bash
-git clone https://github.com/txz8096/product-excellence.git
-cp -r product-excellence/skills/product-excellence ~/.claude/skills/
-```
-
-Or per-project: copy into `<repo>/.claude/skills/` instead.
-
-**With the skills installer:**
-
-```bash
-npx skills@latest add txz8096/product-excellence
-```
+Where the standards come from: months of real design-iteration sessions with
+Claude Code. The fixes that kept being requested got promoted into defaults;
+the measurement mistakes that produced false findings got documented so they
+never happen twice.
 
 ## Notes on honesty
 
@@ -103,7 +116,8 @@ Two rules are load-bearing and worth knowing before you trust a report:
   assistive-technology testing, and reports never claim "WCAG compliant."
 - Reviews on a local/static server distinguish environment artifacts from
   product bugs: "the API is down locally" is not a finding; "there is no
-  timeout or error path even if production works" is.
+  timeout or error path even if production works" is. The verdict says what
+  it was verified on.
 
 ## Credits
 
