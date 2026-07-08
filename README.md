@@ -1,13 +1,19 @@
 # Product Excellence Skill
 
-A Claude Code skill that runs a standardized pre-launch design QA on any web
-surface — and ends in a prioritized, paste-ready fix list instead of a critique
-essay.
+Vibe coding has a lopsided ratio: building something takes about 30% of the
+time, and raising it to the quality you'd actually ship takes the other 70%.
+On product teams, that 70% has a name — product excellence — and it runs on
+review passes, checklists, and hard-won instincts about what breaks before
+launch.
 
-Built by a designer, from months of real design-iteration sessions with Claude
-Code: the fixes that kept being requested got promoted into defaults, and the
-measurement mistakes that produced false findings got documented so they never
-happen twice.
+This skill packages those instincts into a repeatable process for Claude Code:
+a standardized pre-launch design QA on any web surface that ends in a
+prioritized, paste-ready fix list instead of a critique essay.
+
+It was built by a designer from months of real design-iteration sessions:
+the fixes that kept being requested got promoted into defaults, and the
+measurement mistakes that produced false findings got documented so they
+never happen twice.
 
 ## What it does
 
