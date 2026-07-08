@@ -139,7 +139,6 @@ Two rules are load-bearing and worth knowing before you trust a report:
 - Motion standards adapted from [Emil Kowalski](https://animations.dev)'s
   `review-animations` skill, under his "default to flagging; approval is
   earned" philosophy.
-- Repo layout inspired by [mattpocock/skills](https://github.com/mattpocock/skills).
 
 ## License
 
