@@ -16,8 +16,9 @@ description: >
 # Product Excellence Review
 
 A pre-launch gate. The goal is not a critique essay — it is a **prioritized list of
-findings the user can paste straight back into Claude Code as fix prompts**. Every
-finding must be specific enough that a fresh session with no context could act on it.
+findings the user can paste straight back into their coding agent as fix prompts**.
+Every finding must be specific enough that a fresh session with no context could act
+on it.
 
 ## Step 0 — Scope and ground truth
 
@@ -31,9 +32,27 @@ Before reviewing anything:
    product has an established voice (colors, type scale, card treatments, hover
    language), the new surface must speak it.
 3. **Render it for real.** Never review from source code alone; the page as rendered
-   is the product. Start a preview server (`preview_start`, or a static server for
-   plain HTML) and drive the actual page. Interactions must be exercised, not read
-   about: click the buttons, open the panels, hover the cards, submit the inputs.
+   is the product. Serve it (dev server or static server) and drive the actual page
+   in a browser. Interactions must be exercised, not read about: click the buttons,
+   open the panels, hover the cards, submit the inputs.
+
+## Tooling: what this skill needs
+
+The process is platform-agnostic — it runs on any agent that can drive a browser.
+Five capabilities, and where they come from:
+
+| Capability | Claude Code | Other agents (Cursor, Codex, …) |
+|---|---|---|
+| Serve + render the page | `preview_start` | dev/static server + a browser tool (Playwright, Chrome DevTools MCP) |
+| Run JS in the page — "**browser eval**" | `preview_eval` | Playwright `page.evaluate`, DevTools MCP evaluate |
+| Resize the viewport | `preview_resize` | `page.setViewportSize`, DevTools emulation |
+| Screenshot / accessibility snapshot | `preview_screenshot` / `preview_snapshot` | `page.screenshot`, a11y tree dump |
+| Console + network logs | `preview_console_logs` / `preview_network` | DevTools MCP, Playwright tracing |
+
+The reference files say "browser eval" for the run-JS capability — map it to
+whatever your platform calls it. If the platform has no browser tool at all, write
+a small Playwright script and run it from the shell: every check in this skill is
+plain browser JavaScript and pastes into `page.evaluate` unchanged.
 
 ## The four passes
 
@@ -64,9 +83,10 @@ kept being requested, promoted into defaults. Treat them as the bar:
   large share of 50+ users actually read. If the layout is fixed-height
   (`body { overflow: hidden }`), also test a tall screen (≥1000px height) —
   fixed-height heroes tuned at ~750px break there.
-- **Measure, don't eyeball.** Use `preview_inspect` for computed CSS (font-size,
-  padding, color, line-height) — it is exact and cheap. Screenshots are for gestalt
-  and layout only; never read a color or a font size off a screenshot.
+- **Measure, don't eyeball.** Read computed CSS (font-size, padding, color,
+  line-height) via browser eval or your platform's inspect tool — it is exact and
+  cheap. Screenshots are for gestalt and layout only; never read a color or a font
+  size off a screenshot.
 - **Console must be clean.** Any console error at load or during interaction is a
   finding, minimum P1.
 - **Contrast is the usual offender via opacity.** Small labels and meta text set at
@@ -163,13 +183,13 @@ relitigating each item.
 **Fix prompts are the deliverable.** Each must name the file, the selector or
 element, the current value, the target value, and how to verify ("at 375px,
 `scrollWidth` equals viewport width"). Write them so they work in a brand-new
-Claude Code session.
+agent session, whatever the platform.
 
 ## Local environment vs. production
 
 Reviewing on a local/static server means some failures are artifacts, not bugs.
 Before filing a P0 on a broken flow, check *which code path actually ran*: did a
-network request fire at all (`preview_network`)? Is a backend (serverless
+network request fire at all (check the network log)? Is a backend (serverless
 functions, API keys) simply absent locally? Preview harnesses can also inject
 globals (e.g. a `window.claude` runtime) that change the app's behavior. Rule:
 report what you observed, name the environment caveat explicitly, and judge the
@@ -185,7 +205,8 @@ a fill that doesn't enable the submit button).
 
 When the user says "fix it," the review's fix prompts become your work orders:
 
-1. **Read the repo's standing rules first** (CLAUDE.md, contributing docs).
+1. **Read the repo's standing rules first** (CLAUDE.md, AGENTS.md, .cursor/rules,
+   contributing docs — whichever the repo uses).
    Package-manager choices, lockfile rules, "don't create .bak files," design-system
    boundaries — violating house rules while fixing design bugs is a net negative.
    Check which branch you're on before touching anything.
@@ -200,8 +221,8 @@ When the user says "fix it," the review's fix prompts become your work orders:
    choice) about which direction wins, then update the doc to match. Also update
    any machine-readable content copies the fixes touched.
 5. **Leave the workflow documented.** If fixing changed how the project is edited
-   (new build step, new file layout), record it in the project's CLAUDE.md so the
-   next session doesn't undo it.
+   (new build step, new file layout), record it in the project's agent instructions
+   file (CLAUDE.md / AGENTS.md / .cursor/rules) so the next session doesn't undo it.
 6. **Save the acceptance checks.** Write the criteria you just verified to
    `qa-checks.md` at the repo root (format in
    [references/launch-readiness.md](references/launch-readiness.md)) so the next

@@ -6,11 +6,12 @@ On product teams, that 70% has a name — product excellence — and it runs on
 review passes, checklists, and hard-won instincts about what breaks before
 launch.
 
-This skill gives Claude Code those instincts. One request, and it drives your
-**rendered page** — real browser, real viewports, real clicks — through the
-pre-launch review a design team would run, and hands back a ranked list of
+This skill gives your coding agent those instincts — Claude Code, Cursor,
+Codex, or anything else that can drive a browser. One request, and it drives
+your **rendered page** — real browser, real viewports, real clicks — through
+the pre-launch review a design team would run, and hands back a ranked list of
 what to fix, each item written as a prompt you can paste straight back into
-Claude Code.
+the agent.
 
 You don't need to know what to look for. That's the point.
 
@@ -40,21 +41,35 @@ patterns from being accidentally "fixed" later.
 
 ## Quickstart
 
-Install (pick one):
+Install with the skills installer (it asks which agents to target — Claude
+Code, Cursor, Codex, and others):
 
 ```bash
-# skills installer
 npx skills@latest add txz8096/product-excellence
-
-# or manual
-git clone https://github.com/txz8096/product-excellence.git
-cp -r product-excellence/skills/product-excellence ~/.claude/skills/
 ```
 
-(For one project only: copy into `<your-repo>/.claude/skills/` instead.)
+Or manually, per agent:
 
-Then, in Claude Code, point it at anything a browser can render — a local
-HTML file, a dev server, a deployed URL:
+```bash
+git clone https://github.com/txz8096/product-excellence.git
+```
+
+- **Claude Code:** `cp -r product-excellence/skills/product-excellence ~/.claude/skills/`
+  (or into `<your-repo>/.claude/skills/` for one project)
+- **Cursor:** keep the folder in your repo and add a project rule that says
+  *"for any pre-launch / design review request, read
+  `skills/product-excellence/SKILL.md` and follow it"*
+- **Codex (or any AGENTS.md-based agent):** same folder, plus one line in
+  `AGENTS.md` pointing at the SKILL.md
+
+The skill needs an agent that can drive a browser (render, run JS, resize,
+screenshot). Claude Code has this built in; for other agents a Playwright or
+Chrome DevTools MCP works — and if there's no browser tool at all, the agent
+can run every check through a small Playwright script, since they're all
+plain browser JavaScript. The SKILL.md includes the capability map.
+
+Then point your agent at anything a browser can render — a local HTML file,
+a dev server, a deployed URL:
 
 ```
 run a product excellence review on index.html
@@ -62,11 +77,11 @@ run a product excellence review on index.html
 
 It also triggers on "pre-launch check", "is this ready to ship?", and
 "review this before I deploy". A full review of a small site takes a few
-minutes; Claude resizes viewports, clicks through flows, and measures as it
-goes.
+minutes; the agent resizes viewports, clicks through flows, and measures as
+it goes.
 
 When the report is back, say **"fix it"** — the fix prompts become work
-orders: Claude applies them in source, re-verifies each against its own
+orders: the agent applies them in source, re-verifies each against its own
 acceptance criterion, and saves the checks to `qa-checks.md` so the *next*
 review catches regressions before hunting new findings.
 

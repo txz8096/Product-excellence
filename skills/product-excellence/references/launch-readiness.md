@@ -31,7 +31,7 @@ Example finding:
 
 ## 2. Link integrity
 
-- Collect every `href` on every reviewed surface (`preview_eval`:
+- Collect every `href` on every reviewed surface (browser eval:
   `[...document.querySelectorAll('a[href]')].map(a => a.href)`), dedupe, and
   verify each resolves: `curl -sI -o /dev/null -w '%{http_code}'` per URL
   (HEAD, then GET for servers that reject HEAD). Internal `#anchors` must

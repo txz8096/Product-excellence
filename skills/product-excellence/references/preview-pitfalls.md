@@ -26,8 +26,9 @@ through preview tools. Each of these burned a real review once.
 
 ## Driving React (or similar) apps
 
-- **`preview_fill` may not update framework state.** Setting `.value` directly
-  doesn't fire React's onChange, so submit buttons stay disabled and your
+- **Programmatic fill may not update framework state.** Whatever the fill tool
+  (Claude Code's `preview_fill`, Playwright's `fill`, raw JS), setting `.value`
+  directly doesn't fire React's onChange, so submit buttons stay disabled and your
   "click did nothing" is a broken test, not a broken product. Use the native
   setter + input event:
   ```js
@@ -58,4 +59,4 @@ through preview tools. Each of these burned a real review once.
   `{" "}` separators, not more CSS.
 - **Full-page screenshots ≠ viewport.** Some screenshot tools capture the full
   document or an upscaled canvas; don't infer viewport-relative positions from
-  the image. Bounding rects from `preview_eval` are ground truth.
+  the image. Bounding rects measured via browser eval are ground truth.

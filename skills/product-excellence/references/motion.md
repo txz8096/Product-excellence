@@ -50,14 +50,14 @@ on rapidly re-triggered elements · layout-property animation · missing
 - Scan stylesheets for the triggers above (`transition: all`, `ease-in`,
   keyframes touching layout properties) — same technique as the hover/focus
   rule scan in the main pass.
-- `document.getAnimations()` in `preview_eval` lists live animations with
+- `document.getAnimations()` via browser eval lists live animations with
   durations and easing; check durations against the 300ms bar.
 - Interruptibility: fire the trigger twice in quick succession and screenshot
   or measure mid-flight — a restart from the initial state is the tell.
 - Reduced motion: emulate `prefers-reduced-motion: reduce` and confirm motion
   is toned down, not just present.
 - When something feels off but you can't name it, slow it down (set
-  `animation-duration`/`transition-duration` ×10 via `preview_eval`) and watch
+  `animation-duration`/`transition-duration` ×10 via browser eval) and watch
   what actually happens — then set it back.
 
 ## Fixing (order of preference, for fix prompts)

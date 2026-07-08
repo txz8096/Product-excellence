@@ -9,7 +9,7 @@ Most failures in this codebase's history came from **opacity on small text**, no
 from bad color picks. `rgba(...)` and `opacity: 0.55` composite against the real
 background — judge the *effective* color.
 
-Run this in `preview_eval` to compute effective contrast for all text nodes:
+Run this in the page (browser eval) to compute effective contrast for all text nodes:
 
 ```js
 (() => {
@@ -82,8 +82,8 @@ WCAG-exempt but still flag them at P2 if barely legible: exempt isn't invisible.
 - **Color is not the only channel.** Anything communicated by color alone (status,
   active tab, chosen option) gets a second signal — weight, icon, underline, label.
 - **Motion.** `prefers-reduced-motion: reduce` disables or tones down animation.
-  Verify with `preview_resize`'s color-scheme emulation counterpart: run
-  `matchMedia('(prefers-reduced-motion: reduce)')` handling exists in CSS or JS.
+  Verify by emulating the media feature, or confirm handling for
+  `matchMedia('(prefers-reduced-motion: reduce)')` exists in the CSS or JS.
 - **Dark mode** (only if the product claims it): re-run the contrast script with
   the dark scheme emulated.
 

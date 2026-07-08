@@ -13,7 +13,7 @@ is designed), mobile last (that's where it breaks).
 1. **Screenshot for gestalt.** Look for: sections that feel cramped or stranded,
    uneven gutters, elements that visually drift off the grid, images at awkward
    sizes.
-2. **Overflow check (programmatic).** Run in `preview_eval`:
+2. **Overflow check (programmatic).** Run in the page (browser eval):
    ```js
    (() => {
      const de = document.documentElement;
@@ -41,8 +41,8 @@ is designed), mobile last (that's where it breaks).
 
 ### Spacing-scale audit (once, at desktop)
 
-Inspect the repeated components (cards, list rows, section headers) with
-`preview_inspect` and record padding / gap / margin values. You are looking for:
+Inspect the repeated components (cards, list rows, section headers) via computed
+styles (browser eval, `getComputedStyle`) and record padding / gap / margin values. You are looking for:
 
 - **A scale, not a scatter.** Values should cluster on a step scale (e.g. 8/16/24/
   40). Three cards with padding 24, 22, and 25 is a rhythm finding even though no
@@ -76,7 +76,7 @@ one column orphans, nav that wraps to two lines, images that jump size classes.
 A page that moves under the reader is a rhythm bug, even when every static
 screenshot looks right.
 
-- **Measure CLS during load** in `preview_eval`:
+- **Measure CLS during load** via browser eval:
   ```js
   (() => new Promise(res => {
     let cls = 0, worst = null;
@@ -103,7 +103,7 @@ screenshot looks right.
 ### Content stress test
 
 The happy-path copy is the best case. Stress the repeated components with
-hostile-but-legal content via `preview_eval` (swap text into the live DOM,
+hostile-but-legal content via browser eval (swap text into the live DOM,
 screenshot, then reload to reset):
 
 - Longest realistic string per slot: a 40-character name in a card title, a
