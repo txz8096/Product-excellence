@@ -77,8 +77,8 @@ machine-readable content copies (JSON-LD, llms.txt, meta) the fixes touched.
 **Manual (Claude Code):**
 
 ```bash
-git clone https://github.com/<you>/skills.git
-cp -r skills/skills/product-excellence ~/.claude/skills/
+git clone https://github.com/txz8096/product-excellence.git
+cp -r product-excellence/skills/product-excellence ~/.claude/skills/
 ```
 
 Or per-project: copy into `<repo>/.claude/skills/` instead.
@@ -86,7 +86,7 @@ Or per-project: copy into `<repo>/.claude/skills/` instead.
 **With the skills installer:**
 
 ```bash
-npx skills@latest add <you>/skills
+npx skills@latest add txz8096/product-excellence
 ```
 
 ## Notes on honesty
