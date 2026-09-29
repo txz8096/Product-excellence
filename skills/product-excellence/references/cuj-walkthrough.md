@@ -100,6 +100,15 @@ Also score three cognitive-load signals across the journey:
 - Friction that slows but doesn't block (extra scroll, weak affordance with a
   workaround) → **P2**.
 
+Category: a walkthrough finding is **Category A (fix)** when the missing piece
+already exists elsewhere in the product — a gloss that's on the sibling page, a
+link that exists but isn't surfaced, a label that contradicts a named pattern —
+surfacing what already exists has one answer. It is **Category B (needs design input)**
+when the persona needs something the product doesn't have yet, and there's more
+than one sane way to give it to them: write a gloss inline, add a tooltip, or
+restructure the opening so the term arrives after its context. State the decision
+as the persona's unanswered question, then name the variations.
+
 Each finding cites the persona and step: "Recruiter persona, CUJ 1 step 2:
 'AutoTFX' appears in the hero with no gloss; she can't map it to a skill she's
 hiring for." The fix prompt then says exactly what to add and where.

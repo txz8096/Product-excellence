@@ -94,6 +94,13 @@ For each hit: is it feature-detected or progressive (page works without it),
 or load-bearing (layout/flow breaks without it)? Cosmetic degradation is fine
 to ship; load-bearing without a fallback is a P1.
 
+Category: link integrity, meta tags, tab title, and favicon wiring are
+**Category A (fix)** — one right wiring each. The share image itself is
+**Category B (needs design input)** when none exists: crop the hero, compose a
+title card, or screenshot the product are all defensible, and the fix prompt can
+specify the size and the file path but not what the picture is. Same for the
+unfurl headline when the page title doesn't work as one.
+
 Output is one line in the report header, not findings:
 
 > Browser risk: View Transitions (feature-detected, falls back to instant

@@ -109,6 +109,14 @@ Contrast failure or keyboard dead-end on the **primary content/CUJ path** → P0
 Same failure on secondary/meta content → P1. Missing polish (focus ring style,
 decorative alt) → P2.
 
+Category: almost all of this pass is **Category A (fix)** — contrast, focus rings,
+tap targets, alt text on functional images, and landmark structure each have one
+obvious answer. Route to **Category B (needs design input)** only when there are
+several ways to go: a brand color that can't reach 4.5:1 at any usable weight
+(darken it, reserve it for large text, or pair it with a different background —
+a brand call), a focus treatment that has to be designed for a custom control, or
+alt text that requires knowing what a decorative-looking image is meant to say.
+
 ## Honesty rule
 
 This pass is automated measurement plus judgment — it is **not** assistive-

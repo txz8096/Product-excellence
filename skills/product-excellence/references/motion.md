@@ -69,6 +69,12 @@ prompts should start at the top of this ladder, not the bottom.
 
 ## Priority mapping
 
+Category: every fix on the ladder above is **Category A (fix)** — deleting,
+shortening, re-easing, and honoring `prefers-reduced-motion` each have one obvious
+answer. **Category B (needs design input)** is for motion that has to be invented
+rather than corrected: a transition that needs new choreography, or whether a
+surface should animate at all when that's a feel call with several answers.
+
 Motion that blocks or fights the user (uninterruptible animation on a core
 path, seizure-range flashing) → **P0**. Feel-breaking on frequent actions —
 `ease-in`, >300ms on common UI, keyboard-path animation, layout-property jank,

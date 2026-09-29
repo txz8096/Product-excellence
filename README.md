@@ -10,8 +10,8 @@ This skill gives your coding agent those instincts — Claude Code, Cursor,
 Codex, or anything else that can drive a browser. One request, and it drives
 your **rendered page** — real browser, real viewports, real clicks — through
 the pre-launch review a design team would run, and hands back a ranked list of
-what to fix, each item written as a prompt you can paste straight back into
-the agent.
+what to fix, split into the obvious fixes and the ones that need a designer to
+decide something first.
 
 You don't need to know what to look for. That's the point.
 
@@ -33,10 +33,37 @@ user, and a fix prompt that works in a fresh session with zero context:
 > > lines. Acceptance: at 1440×900 and 375×812 the full text is visible
 > > (element scrollWidth ≤ clientWidth).
 
-The report opens with a verdict — **Ship / Ship after P0s / Hold** — and
-findings are ranked P0 (blocker) → P1 (fix before sharing) → P2 (polish),
+## Two categories, because two different people act on them
+
+Findings split into **A — Fixes** and **B — Needs design input**, and the line
+between them is how many good answers the problem has. Category A is the obvious
+ones: the clipped stat line above, a contrast failure with a darker shade already
+in the palette, a dead link, a card padding that should match its sibling page.
+One right answer, paste the prompt, done.
+
+Category B is measured just as hard, but the fix could go two or three defensible
+ways and the design isn't settled enough to pick. The stat row doesn't fit at
+375px — cut a stat, stack them, or reword them shorter? A term needs explaining —
+gloss it inline, add a tooltip, or restructure the opening? Those come with the
+decision stated as one question, the real variations with their tradeoffs, a
+recommendation, the exact input that unblocks it, and a fix prompt that runs the
+moment you answer:
+
+> ### B1. [P1·M] Recruiter persona has no way to tell which project you led
+> - **Decision needed:** does each case study carry an explicit role line, or
+>   does the hero carry one summary credential for all three?
+> - **Recommendation:** per-project role line — a recruiter scanning one case
+>   study never sees the hero.
+> - **Unblocks with:** one role sentence per project (≤12 words each).
+
+The split matters when you say "fix it": the agent applies all of Category A and
+hands Category B back as open decisions instead of quietly picking one variation
+and calling it done.
+
+Both categories rank P0 (blocker) → P1 (fix before sharing) → P2 (polish),
 each tagged S/M/L for effort so you can draw a realistic cut line ("all P0s
-plus the P1-smalls today"). A closing "what's working" section keeps the good
+plus the P1-smalls today"). A P0 in Category B means the launch is waiting on a
+design decision, not on engineering time. A closing "what's working" section keeps the good
 patterns from being accidentally "fixed" later.
 
 ## Quickstart
@@ -80,10 +107,11 @@ It also triggers on "pre-launch check", "is this ready to ship?", and
 minutes; the agent resizes viewports, clicks through flows, and measures as
 it goes.
 
-When the report is back, say **"fix it"** — the fix prompts become work
+When the report is back, say **"fix it"** — the Category A prompts become work
 orders: the agent applies them in source, re-verifies each against its own
 acceptance criterion, and saves the checks to `qa-checks.md` so the *next*
-review catches regressions before hunting new findings.
+review catches regressions before hunting new findings. Category B waits for
+your answers, or for "take your recommendations".
 
 ## The four passes
 
@@ -110,7 +138,7 @@ review catches regressions before hunting new findings.
 
 | File | What it holds |
 |---|---|
-| [skills/product-excellence/SKILL.md](skills/product-excellence/SKILL.md) | The process: scoping, the four passes, house standards, output format, fix mode |
+| [skills/product-excellence/SKILL.md](skills/product-excellence/SKILL.md) | The process: scoping, the four passes, house standards, the fix / needs-design-input split, output format, fix mode |
 | [references/visual-rhythm.md](skills/product-excellence/references/visual-rhythm.md) | Pass 1 checklist + overflow and layout-shift scripts |
 | [references/motion.md](skills/product-excellence/references/motion.md) | Animation bar, adapted from [Emil Kowalski's review-animations](https://github.com/emilkowalski/skills) (animations.dev) |
 | [references/accessibility.md](skills/product-excellence/references/accessibility.md) | Pass 2 checklist + a contrast script that composites opacity |

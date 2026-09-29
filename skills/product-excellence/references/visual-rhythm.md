@@ -143,6 +143,18 @@ Two consistency classes hide from visual comparison and need their own sweep:
 P1 when the inconsistency can mislead (a renamed action reads as a different
 action); P2 when it just reads as sloppiness.
 
+## Category routing for this pass
+
+Overflow, clipping, off-scale spacing, inconsistent tokens, layout shift, and
+anything with a sibling page to copy from are **Category A (fix)** — the target
+value is measurable or already exists, so there's one answer. **Category B (needs
+design input)** is for the cases where the measurement proves something is wrong
+but not what right looks like, and two or three fixes would each work: content
+that doesn't fit at 375px could be cut, collapsed behind a toggle, or reworded
+shorter; a section could get a new layout or fold into a neighbor; a spacing scale
+that doesn't exist yet has to be defined before "off-scale" means anything.
+Defining that scale is one Category B finding, not one per offender.
+
 ## Evidence format
 
 Every finding cites: viewport, selector, measured value, expected value.

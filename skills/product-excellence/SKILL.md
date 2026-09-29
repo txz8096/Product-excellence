@@ -1,7 +1,8 @@
 ---
 name: product-excellence
 description: >
-  Standardized pre-launch design QA that ends in a prioritized, paste-ready fix list.
+  Standardized pre-launch design QA that ends in a prioritized fix list, split into
+  straightforward fixes and findings that need designer input.
   Runs four passes over the rendered product: (1) visual rhythm and responsiveness,
   (2) accessibility, (3) persona-based CUJ walkthroughs, (4) launch readiness
   (share card, link integrity, production re-verify, regression guard). Use whenever the user says
@@ -16,9 +17,10 @@ description: >
 # Product Excellence Review
 
 A pre-launch gate. The goal is not a critique essay — it is a **prioritized list of
-findings the user can paste straight back into their coding agent as fix prompts**.
-Every finding must be specific enough that a fresh session with no context could act
-on it.
+findings the user can paste straight back into their coding agent as fix prompts**,
+split into two categories: straightforward fixes, and findings that need designer
+input before anyone touches them. Every finding must be specific enough that a fresh session
+with no context could act on it.
 
 ## Step 0 — Scope and ground truth
 
@@ -71,7 +73,9 @@ reference file when you begin each pass. If the repo has a `qa-checks.md`
 
 Collect findings as you go with evidence attached (viewport, selector, measured
 value, or walkthrough step). A finding without evidence is an opinion; don't ship
-opinions.
+opinions. Sort each finding into Category A (fix) or Category B (needs design input)
+as you record it — the routing rules are under
+[Two categories of findings](#two-categories-of-findings).
 
 ## House standards
 
@@ -129,6 +133,44 @@ kept being requested, promoted into defaults. Treat them as the bar:
   friendly message with a path forward (not a spinner forever), and the input
   stays usable after an error. Test by blocking the API in devtools if needed.
 
+## Two categories of findings
+
+Every finding lands in exactly one category. The test is **how many good answers
+the problem has**:
+
+- **Category A — Fix.** One obvious answer. The defect and its correct fix are
+  both determined, any competent implementer would land in the same place, and a
+  fresh agent session could apply it from the fix prompt alone. Mobile overflow,
+  contrast failures, dead links, console errors, off-scale spacing where a scale
+  already exists, a nav `<button>` that should be an `<a href>`, a missing
+  `og:image` when the product already has a hero image to use.
+- **Category B — Needs design input.** Several answers, and the design isn't
+  settled enough to pick one. The defect is real and measured, but solving it
+  could go two or three defensible ways — cut the content, reflow it, or rewrite
+  it shorter; add a section, or fold it into an existing one — and which way it
+  goes is a call the designer makes, not the review. Anything requiring copy or
+  imagery that doesn't exist yet, a new component or state, or a naming/IA
+  decision lands here too: the fix has to be designed before it can be written.
+
+Routing rules, applied in order:
+
+1. If the target value is derivable from the design source of truth or a sibling
+   page, there's only one answer → **A**, however bad the bug is. "Match the
+   sibling page's 24px card padding" is A, not B.
+2. If you can write down two or three different fixes that would each be
+   defensible, or the fix needs copy, imagery, or a screen state that doesn't
+   exist yet → **B**.
+3. If the minimum correct fix is A but a better fix would be B, file it once as A
+   and note the B upgrade inside it as an optional direction. Never split one
+   defect across both categories.
+4. Don't use B to duck work. A finding is B only if you can state the specific
+   question the designer has to answer, and name the options. If you can't do
+   both, it's A.
+
+Priorities work identically in both categories — P0 is a launch blocker whether
+or not a human has to unblock it. A P0 in Category B means the launch is blocked
+on a design decision, not on engineering time; the verdict must say so.
+
 ## Output format
 
 ALWAYS use this exact structure:
@@ -138,17 +180,22 @@ ALWAYS use this exact structure:
 Reviewed at: <viewports tested> · Console: <clean / N errors> · Scope: <pages>
 Verified on: <local / production / both> · Regressions: <0 of N saved checks / no saved checks>
 Browser risk: <uneven-support features found, each with/without fallback — or "none">
+Findings: <N> — <n> straightforward fixes (A), <n> need design input (B) · Blockers: <n> P0 (<n> need a design call)
 
 ## Verdict
 <Ship / Ship after P0s / Hold> — one sentence why. (A Ship verdict verified
-only locally is "Ship, then confirm on production".)
+only locally is "Ship, then confirm on production". If any P0 is Category B,
+name it here: the launch is waiting on a design decision, not on a fix.)
 
 ## Findings
-| # | Pri | Effort | Pass | Finding |
-|---|-----|--------|------|---------|
-(one row per finding, ordered by priority then impact)
+| # | Cat | Pri | Effort | Pass | Finding |
+|---|-----|-----|--------|------|---------|
+(one row per finding — all findings in one index, Cat is A or B, A rows first,
+then B; within a category ordered by priority, then impact)
 
-### 1. [P0·S] <short title>
+## A. Fixes — paste-ready
+
+### A1. [P0·S] <short title>
 - **Evidence:** <viewport / selector / measured value / walkthrough step>
 - **Why it matters:** <one sentence, tied to a user or persona>
 - **Fix prompt:** ↓ paste-ready
@@ -156,7 +203,30 @@ only locally is "Ship, then confirm on production".)
 > In <file>, <specific instruction with selectors, values, and acceptance
 > criteria. Self-contained — assume the reader has zero context.>
 
-(repeat per finding)
+(repeat per Category A finding)
+
+## B. Needs design input — decisions before fixes
+
+### B1. [P1·M] <short title>
+- **Evidence:** <viewport / selector / measured value / walkthrough step>
+- **Why it matters:** <one sentence, tied to a user or persona>
+- **Decision needed:** <the one question for the designer, phrased so it can be
+  answered in a sentence or a sketch>
+- **Options:**
+
+| Option | What it costs | What it buys |
+|---|---|---|
+(2–3 real variations, each implementable — no "do it properly" non-options)
+
+- **Recommendation:** <which option, and why — have an opinion>
+- **Unblocks with:** <the exact input needed: a line of copy, a token value, a
+  spec for one state, an image at a named size>
+- **Fix prompt (once decided):** ↓ paste-ready, written against the recommendation
+
+> In <file>, <instruction with the decided value as a named placeholder, e.g.
+> `<APPROVED_HEADLINE>`, plus selectors and acceptance criteria.>
+
+(repeat per Category B finding)
 
 ## What's working
 <3–5 bullets. This prevents good patterns from being "fixed" in the next session.>
@@ -178,12 +248,15 @@ Within a priority, order by (users affected × how early in the journey they hit
 (component logic, an hour-ish), or **L** (architectural — a build step, a
 routing change). Impact decides priority; effort decides the cut line — it
 lets the user say "all P0s plus the P1-smalls before I share this" instead of
-relitigating each item.
+relitigating each item. For Category B, effort tags the implementation after
+the decision, not the deciding.
 
 **Fix prompts are the deliverable.** Each must name the file, the selector or
 element, the current value, the target value, and how to verify ("at 375px,
 `scrollWidth` equals viewport width"). Write them so they work in a brand-new
-agent session, whatever the platform.
+agent session, whatever the platform. A Category B fix prompt is the same thing
+with the undecided value left as a named placeholder — it becomes runnable the
+moment the decision lands.
 
 ## Local environment vs. production
 
@@ -203,7 +276,13 @@ a fill that doesn't enable the submit button).
 
 ## Fix mode
 
-When the user says "fix it," the review's fix prompts become your work orders:
+When the user says "fix it," **Category A is the work order**. Category B is not
+yours to resolve — picking between the variations is the designer's call. Apply
+every Category A fix, then list the Category B items again as open decisions with
+their recommendations. Apply a Category B fix only once the user answers its
+question (or says "take your recommendations") — and when they do, record the
+decision in the commit or the design doc so the choice is traceable, not buried
+in a diff.
 
 1. **Read the repo's standing rules first** (CLAUDE.md, AGENTS.md, .cursor/rules,
    contributing docs — whichever the repo uses).
@@ -230,9 +309,9 @@ When the user says "fix it," the review's fix prompts become your work orders:
 
 ## Scaling the review
 
-- Small change (one component): run all three passes but scoped to the changed
+- Small change (one component): run all four passes but scoped to the changed
   surface plus one sibling page for consistency.
 - Full launch (new page/site): full viewport matrix, all interactive elements,
   2–3 personas × 2 CUJs each.
 - If the user asks for just one pass, run it at full depth and note which of the
-  other two passes you'd recommend before launch and why.
+  other three passes you'd recommend before launch and why.
