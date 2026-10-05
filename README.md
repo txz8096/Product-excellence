@@ -35,11 +35,11 @@ user, and a fix prompt that works in a fresh session with zero context:
 
 ## Two categories, because two different people act on them
 
-Findings split into **A — Fixes** and **B — Needs design input**, and the line
-between them is how many good answers the problem has. Category A is the obvious
-ones: the clipped stat line above, a contrast failure with a darker shade already
-in the palette, a dead link, a card padding that should match its sibling page.
-One right answer, paste the prompt, done.
+Findings split into **A — Straightforward fixes** and **B — Needs design input**,
+and the line between them is how many good answers the problem has. Category A is
+the obvious ones: the clipped stat line above, a contrast failure with a darker
+shade already in the palette, a dead link, a card padding that should match its
+sibling page. One right answer, paste the prompt, done.
 
 Category B is measured just as hard, but the fix could go two or three defensible
 ways and the design isn't settled enough to pick. The stat row doesn't fit at

@@ -73,8 +73,8 @@ reference file when you begin each pass. If the repo has a `qa-checks.md`
 
 Collect findings as you go with evidence attached (viewport, selector, measured
 value, or walkthrough step). A finding without evidence is an opinion; don't ship
-opinions. Sort each finding into Category A (fix) or Category B (needs design input)
-as you record it — the routing rules are under
+opinions. Sort each finding into Category A (straightforward fix) or Category B
+(needs design input) as you record it — the routing rules are under
 [Two categories of findings](#two-categories-of-findings).
 
 ## House standards
@@ -138,11 +138,12 @@ kept being requested, promoted into defaults. Treat them as the bar:
 Every finding lands in exactly one category. The test is **how many good answers
 the problem has**:
 
-- **Category A — Fix.** One obvious answer. The defect and its correct fix are
-  both determined, any competent implementer would land in the same place, and a
-  fresh agent session could apply it from the fix prompt alone. Mobile overflow,
-  contrast failures, dead links, console errors, off-scale spacing where a scale
-  already exists, a nav `<button>` that should be an `<a href>`, a missing
+- **Category A — Straightforward fix.** One obvious answer. The defect and its
+  correct fix are both determined, any competent implementer would land in the
+  same place, and a fresh agent session could apply it from the fix prompt alone.
+  Mobile overflow, contrast failures, dead links, console errors, off-scale
+  spacing where a scale already exists, a nav `<button>` that should be an
+  `<a href>`, a missing
   `og:image` when the product already has a hero image to use.
 - **Category B — Needs design input.** Several answers, and the design isn't
   settled enough to pick one. The defect is real and measured, but solving it
@@ -180,7 +181,7 @@ ALWAYS use this exact structure:
 Reviewed at: <viewports tested> · Console: <clean / N errors> · Scope: <pages>
 Verified on: <local / production / both> · Regressions: <0 of N saved checks / no saved checks>
 Browser risk: <uneven-support features found, each with/without fallback — or "none">
-Findings: <N> — <n> straightforward fixes (A), <n> need design input (B) · Blockers: <n> P0 (<n> need a design call)
+Findings: <N> — <n> straightforward (A), <n> need design input (B) · Blockers: <n> P0 (<n> need a design call)
 
 ## Verdict
 <Ship / Ship after P0s / Hold> — one sentence why. (A Ship verdict verified
@@ -193,7 +194,7 @@ name it here: the launch is waiting on a design decision, not on a fix.)
 (one row per finding — all findings in one index, Cat is A or B, A rows first,
 then B; within a category ordered by priority, then impact)
 
-## A. Fixes — paste-ready
+## A. Straightforward fixes
 
 ### A1. [P0·S] <short title>
 - **Evidence:** <viewport / selector / measured value / walkthrough step>
